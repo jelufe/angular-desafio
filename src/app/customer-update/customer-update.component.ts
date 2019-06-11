@@ -74,8 +74,12 @@ export class CustomerUpdateComponent implements OnInit {
 
   updateCustomer(form: NgForm) {
     this.isLoadingResults = true;
-    form.date = form.date.format('DD/MM/YYYY');
-    this.api.updateCustomer(this.route.snapshot.params.id, form)
+    const cliente = {
+      name: this.customerForm.get('name').value,
+      contactName: this.customerForm.get('contactName').value,
+      date: this.customerForm.get('date').value.format('DD/MM/YYYY')
+    };
+    this.api.updateCustomer(this.route.snapshot.params.id, cliente)
       .subscribe(res => {
           this.isLoadingResults = false;
           this.router.navigate(['/customer-show/' + this.route.snapshot.params.id]);

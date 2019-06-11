@@ -53,9 +53,13 @@ export class CustomerCreateComponent implements OnInit {
 
   addCustomer(form: NgForm) {
     this.isLoadingResults = true;
-    form.date = form.date.format('DD/MM/YYYY');
+    const cliente = {
+      name: this.customerForm.get('name').value,
+      contactName: this.customerForm.get('contactName').value,
+      date: this.customerForm.get('date').value.format('DD/MM/YYYY')
+    };
 
-    this.api.addCustomer(form)
+    this.api.addCustomer(cliente)
       .subscribe(res => {
           const id = res.id;
           this.isLoadingResults = false;

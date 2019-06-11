@@ -1,0 +1,26 @@
+<div>
+  <h3>Editar Cliente</h3>
+</div>
+<div class="example-loading-shade" *ngIf="isLoadingResults">
+  <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+</div>
+<form *ngIf="!isLoadingResults" class="example-container" [formGroup]="customerForm" (ngSubmit)="updateCustomer(customerForm.value)">
+  <mat-form-field>
+    <input matInput name="name" placeholder="Nome do cliente (razão social ou nome fantasia)" formControlName="name">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput name="contactName" placeholder="Nome do contato (pessoa responsável)" formControlName="contactName">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput name="date" [matDatepicker]="dp" placeholder="Data em que se tornou cliente" formControlName="date" [formControl]="date">
+    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+    <mat-datepicker #dp
+                    startView="month"
+                    (yearSelected)="chosenYearHandler($event)"
+                    (monthSelected)="chosenMonthHandler($event, dp)"
+                    panelClass="example-month-picker">
+    </mat-datepicker>
+  </mat-form-field>
+
+  <button type="submit" [disabled]="!customerForm.valid" mat-raised-button color="primary" >Editar</button>
+</form>

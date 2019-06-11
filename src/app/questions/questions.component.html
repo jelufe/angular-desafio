@@ -1,0 +1,32 @@
+<div class="example-container mat-elevation-z8">
+  <div class="button-row">
+    <button mat-flat-button color="accent" [routerLink]="['/evaluation-create']"><mat-icon>list</mat-icon> Voltar</button>
+  </div>
+  <mat-card class="example-card">
+    <h3>Avaliação do período de {{date}}</h3>
+
+    <div *ngIf="isLoadingResults">
+      <mat-spinner ></mat-spinner>
+    </div>
+
+    <div *ngIf="!isLoadingResults">
+      <h4>{{(pos+1)}} de {{customers.length}}</h4>
+      <mat-progress-bar mode="determinate" value="{{andamento}}" color="accent"></mat-progress-bar>
+      <mat-card-header>
+        <mat-card-title><h2>{{customers[pos].name}}</h2></mat-card-title>
+        <mat-card-subtitle>{{customers[pos].contactName}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <form class="example-container" [formGroup]="evaluationForm" (ngSubmit)="addEvaluation(evaluationForm.value)">
+            <mat-form-field>
+              <input matInput name="nota" type="number" min="0" max="10" placeholder="Em uma escala de 0 a 10, qual a probabilidade de você recomendar nosso produto/serviço a um amigo/conhecido?" formControlName="nota">
+            </mat-form-field>
+            <mat-form-field>
+              <textarea matInput name="pergunta" placeholder="Qual é o motivo dessa nota?" formControlName="pergunta"></textarea>
+            </mat-form-field>
+          <button type="submit" mat-raised-button color="primary" [disabled]="!evaluationForm.valid" mat-button color="primary" >Adicionar</button>
+        </form>
+      </mat-card-content>
+    </div>
+  </mat-card>
+</div>

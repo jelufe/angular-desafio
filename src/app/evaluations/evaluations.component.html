@@ -1,0 +1,46 @@
+<div>
+  <h3>Lista de Avaliações do período de {{date}}</h3>
+  <form class="example-container" *ngIf="!isLoadingResults" [formGroup]="avaluationForm" (ngSubmit)="addAvaluation(avaluationForm.value)">
+  <mat-form-field>
+    <input matInput name="dateMoment" [matDatepicker]="dp" placeholder="Mês e Ano" formControlName="dateMoment" [formControl]="dateMoment">
+    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+    <mat-datepicker #dp
+                    startView="multi-year"
+                    (yearSelected)="chosenYearHandler($event)"
+                    (monthSelected)="chosenMonthHandler($event, dp)"
+                    panelClass="example-month-picker">
+    </mat-datepicker>
+  </mat-form-field>
+  <button type="submit" mat-raised-button color="primary" [disabled]="!avaluationForm.valid" mat-button color="primary" >Selecionar</button>
+  </form>
+</div>
+<div *ngIf="isLoadingResults">
+  <mat-spinner ></mat-spinner>
+</div>
+<h5 *ngIf="!isLoadingResults && !hasEvaluations">
+  Sem Avaliações nessa data
+</h5>
+<table *ngIf="!isLoadingResults && hasEvaluations" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <ng-container matColumnDef="customerName">
+    <th mat-header-cell *matHeaderCellDef class="centre"> Nome do cliente </th>
+    <td mat-cell *matCellDef="let element" class="centre"> {{element.customerName}} </td>
+    <td mat-footer-cell *matFooterCellDef class="centre"><b>NPS</b></td>
+  </ng-container>
+
+  <ng-container matColumnDef="nota">
+    <th mat-header-cell *matHeaderCellDef class="centre"> Em uma escala de 0 a 10, qual a probabilidade de você recomendar nosso produto/serviço a um amigo/conhecido? </th>
+    <td mat-cell *matCellDef="let element" class="centre"> {{element.nota}} </td>
+    <td mat-footer-cell *matFooterCellDef class="centre" [style.color]="color"><b>{{nps | number : '1.2-2'}}%</b></td>
+  </ng-container>
+
+  <ng-container matColumnDef="pergunta">
+    <th mat-header-cell *matHeaderCellDef class="centre"> Qual é o motivo dessa nota? </th>
+    <td mat-cell *matCellDef="let element" class="centre"> {{element.pergunta}} </td>
+    <td mat-footer-cell *matFooterCellDef class="centre"></td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+</table>

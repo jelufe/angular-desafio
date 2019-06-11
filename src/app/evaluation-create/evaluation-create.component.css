@@ -1,0 +1,21 @@
+table {
+  margin-bottom: 2em;
+  width: 98%;
+}
+
+mat-spinner{
+  margin-bottom: 2em;
+}
+
+button{
+  margin-bottom: 2em;
+}
+
+.example-container > * {
+  width: 98%;
+}
+
+.mat-column {
+  flex: 0 0 25% !important;
+  min-width: 104px !important;
+}

@@ -1,0 +1,66 @@
+<div>
+  <h3>Realizar Avaliação</h3>
+</div>
+<h4 *ngIf="erroDate" style="color: red;">
+  já foi realizado uma avaliação nessa data, por favor selecione outra data
+</h4>
+<div *ngIf="isLoadingResults || isLoadingResults2">
+  <mat-spinner ></mat-spinner>
+</div>
+<form class="example-container" *ngIf="!isLoadingResults && !isLoadingResults2" [formGroup]="avaluationForm" (ngSubmit)="addAvaluation(avaluationForm.value)">
+
+  <mat-form-field>
+    <input matInput name="date" (input)="reset()" [matDatepicker]="dp" placeholder="Mês e Ano" formControlName="date" [formControl]="date">
+    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+    <mat-datepicker #dp
+                    startView="multi-year"
+                    (yearSelected)="chosenYearHandler($event)"
+                    (monthSelected)="chosenMonthHandler($event, dp)"
+                    panelClass="example-month-picker">
+    </mat-datepicker>
+  </mat-form-field>
+
+  <h4 *ngIf="!isLoadingResults && !isLoadingResults2">
+    Selecione os Clientes que irão participar da avaliação
+  </h4>
+  <h4 *ngIf="erroPorcentagem" style="color: red;">
+    A avaliação deve conter 20% dos clientes cadastrados
+  </h4>
+  <h5 *ngIf="!isLoadingResults && !isLoadingResults2 && !hasClientes">
+    Sem Clientes cadastrados no momento
+  </h5>
+  <table *ngIf="!isLoadingResults && hasClientes" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <!-- Checkbox Column -->
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()"
+                      [aria-label]="checkboxLabel()">
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox *ngIf="checkAvailability(row.id)" (click)="$event.stopPropagation()"
+                      (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)"
+                      [aria-label]="checkboxLabel(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Nome do cliente </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+        (click)="selection.toggle(row)">
+    </tr>
+  </table>
+
+  <button type="submit" mat-raised-button color="primary" [disabled]="!avaluationForm.valid || !hasClientes" mat-button color="primary" >Iniciar Avaliação</button>
+</form>
+
